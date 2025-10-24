@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+from langchain_core.messages import HumanMessage
 from langchain_mcp_adapters.tools import load_mcp_tools
 from langchain_openai import ChatOpenAI
 from langgraph.prebuilt import create_react_agent
@@ -11,7 +12,8 @@ from mcp.client.stdio import stdio_client
 
 load_dotenv()
 
-llm = ChatOpenAI()
+llm = ChatOpenAI(model="gpt-5-nano")
+print(f"Model being used: {llm.model_name}")
 print(Path("servers/math_server.py").absolute().as_posix())
 
 stdio_server_params =  StdioServerParameters(
@@ -24,8 +26,12 @@ async def main():
         async with ClientSession(read_stream=read, write_stream=write) as session:
             await session.initialize()
             print('Session initialized')
-            tools = await session.list_tools()
+            tools = await load_mcp_tools(session)
             print(tools)
+
+            agent = create_react_agent(llm, tools)
+            result = await agent.ainvoke({"messages": [HumanMessage(content="What is 2 + 2?")]})
+            print(result)
             # tools = await load_mcp_tools(session)
             # print(tools)
             # agent = create_react_agent(llm, tools)
