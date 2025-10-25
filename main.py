@@ -12,7 +12,8 @@ from mcp.client.stdio import stdio_client
 
 load_dotenv()
 
-llm = ChatOpenAI(model="gpt-5-nano")
+# llm = ChatOpenAI(model="gpt-5-nano")
+llm = ChatOpenAI()
 print(f"Model being used: {llm.model_name}")
 print(Path("servers/math_server.py").absolute().as_posix())
 
@@ -30,7 +31,7 @@ async def main():
             print(tools)
 
             agent = create_react_agent(llm, tools)
-            result = await agent.ainvoke({"messages": [HumanMessage(content="What is 2 + 2?")]})
+            result = await agent.ainvoke({"messages": [HumanMessage(content="What is 2 + 2 + 5 + 2 +10?")]})
             print(result)
             # tools = await load_mcp_tools(session)
             # print(tools)
