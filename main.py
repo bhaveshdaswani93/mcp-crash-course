@@ -17,21 +17,24 @@ llm = ChatOpenAI()
 print(f"Model being used: {llm.model_name}")
 print(Path("servers/math_server.py").absolute().as_posix())
 
-stdio_server_params =  StdioServerParameters(
+stdio_server_params = StdioServerParameters(
     command="python",
     args=[Path("servers/math_server.py").absolute().as_posix()],
 )
+
 
 async def main():
     async with stdio_client(stdio_server_params) as (read, write):
         async with ClientSession(read_stream=read, write_stream=write) as session:
             await session.initialize()
-            print('Session initialized')
+            print("Session initialized")
             tools = await load_mcp_tools(session)
             print(tools)
 
             agent = create_react_agent(llm, tools)
-            result = await agent.ainvoke({"messages": [HumanMessage(content="What is 2 + 2 + 5 + 2 +10?")]})
+            result = await agent.ainvoke(
+                {"messages": [HumanMessage(content="What is 2 + 2 + 5 + 2 +10?")]}
+            )
             print(result)
             # tools = await load_mcp_tools(session)
             # print(tools)
