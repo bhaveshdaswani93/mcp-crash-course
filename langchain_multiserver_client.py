@@ -23,6 +23,11 @@ async def main():
             "weather": {
                 "url": "http://localhost:8000/mcp",
                 "transport": "streamable_http",
+            },
+            "playwright": {
+                "command": "npx",
+                "args": ["@playwright/mcp@latest"],
+                "transport": "stdio",
             }
         }
     )
@@ -32,12 +37,9 @@ async def main():
     print(f"Loaded tools: {tools}")
 
     agent = create_react_agent(llm, tools)
-    # result = await agent.ainvoke(
-    #     {"messages": [{"role": "user", "content": "What is 2 + 2 + 5 + 2 +10?"}]}
-    # )
-
+    
     result = await agent.ainvoke(
-        {"messages": [{"role": "user", "content": "What is the weather in New York"}]}
+        {"messages": [{"role": "user", "content": "Navigate to https://en.wikipedia.org/wiki/Albert_Einstein, read the page content, and provide a brief summary about Albert Einstein"}]}
     )
     print(f"Agent result: {result}")
 
