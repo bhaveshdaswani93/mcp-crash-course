@@ -32,8 +32,12 @@ async def main():
     print(f"Loaded tools: {tools}")
 
     agent = create_react_agent(llm, tools)
+    # result = await agent.ainvoke(
+    #     {"messages": [{"role": "user", "content": "What is 2 + 2 + 5 + 2 +10?"}]}
+    # )
+
     result = await agent.ainvoke(
-        {"messages": [{"role": "user", "content": "What is 2 + 2 + 5 + 2 +10?"}]}
+        {"messages": [{"role": "user", "content": "What is the weather in New York"}]}
     )
     print(f"Agent result: {result}")
 
